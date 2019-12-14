@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
@@ -13,39 +14,63 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: Scaffold(
-          appBar: AppBar(title: Text("Clock")),
-          body: new Container(
-            child: new CustomPaint(
-              foregroundPainter: new MyPainter(3)
-            ),
-            color: Colors.black,
-          )
-        )
-    );
+            appBar: AppBar(title: Text("Clock")),
+            body: new Container(
+              child: DigitalNumber(),
+//              color: Colors.black,
+            )));
   }
 }
 
-class Clock extends StatefulWidget {
+class DigitalNumber extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ClockState();
+    return _DigitalNumberState();
   }
 }
 
-class _ClockState extends State<Clock> {
+class _DigitalNumberState extends State<DigitalNumber> {
+  Timer _timer;
+  int _number = 0;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          _number++;
+          if (_number > 9) {
+            _number = 0;
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Container(
-      child: new CustomPaint(
-          foregroundPainter: new MyPainter(0)
-      ),
-      color: Colors.black,
+//      child: Text(_number.toString()),
+      child: CustomPaint(painter: DigitalNumberPainter(_number)),
+//      color: Colors.black,
     );
   }
 }
 
-class MyPainter extends CustomPainter {
-
+class DigitalNumberPainter extends CustomPainter {
   Paint white = new Paint()
     ..color = Colors.orangeAccent
     ..strokeCap = StrokeCap.round
@@ -53,27 +78,27 @@ class MyPainter extends CustomPainter {
     ..strokeWidth = 8.0;
   var funList = [];
   Map digitalMap = {
-    0:[true, false, true, true, true, true, true],
-    1:[false, false, false, false, false, true, true],
-    2:[true, true, true, false, true, true, false],
-    3:[true, true, true, false, false, true, true],
-    4:[false, true, false, true, false, true, true],
-    5:[true, true, true, true, false, false, true],
-    6:[true, true, true, true, true, false, true],
-    7:[true, false, false, true, false, true, true],
-    8:[true, true, true, true, true, true, true],
-    9:[true, true, true, true, false, true, true],
+    0: [true, false, true, true, true, true, true],
+    1: [false, false, false, false, false, true, true],
+    2: [true, true, true, false, true, true, false],
+    3: [true, true, true, false, false, true, true],
+    4: [false, true, false, true, false, true, true],
+    5: [true, true, true, true, false, false, true],
+    6: [true, true, true, true, true, false, true],
+    7: [true, false, false, true, false, true, true],
+    8: [true, true, true, true, true, true, true],
+    9: [true, true, true, true, false, true, true],
   };
   int number;
 
-  MyPainter(int number) {
+  DigitalNumberPainter(int number) {
     this.number = number;
 
     double padding = 8;
     double rowWidth = 36;
     double columnHeight = 48;
 
-    for (int i=0; i<3; i++) {
+    for (int i = 0; i < 3; i++) {
       double height = columnHeight * i + padding;
       Offset p1 = new Offset(padding + padding, height);
       Offset p2 = new Offset(rowWidth, height);
@@ -83,7 +108,7 @@ class MyPainter extends CustomPainter {
       });
     }
 
-    for (int i=0; i<2; i++) {
+    for (int i = 0; i < 2; i++) {
       double width = rowWidth * i + padding;
       Offset p1 = new Offset(width, padding + padding);
       Offset p2 = new Offset(width, columnHeight);
@@ -104,7 +129,7 @@ class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     List<bool> num = digitalMap[number];
-    for (int i=0;i<7;i++) {
+    for (int i = 0; i < 7; i++) {
       if (num[i]) {
         funList[i](canvas);
       }
@@ -112,7 +137,8 @@ class MyPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(MyPainter oldDelegate) {
-    return number == oldDelegate.number;
+  bool shouldRepaint(DigitalNumberPainter oldDelegate) {
+//    return number == oldDelegate.number;
+    return true;
   }
 }
