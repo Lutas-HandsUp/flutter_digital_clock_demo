@@ -100,11 +100,6 @@ class _DigitalClockState extends State<DigitalClock> {
 }
 
 class DigitalNumberPainter extends CustomPainter {
-  Paint white = new Paint()
-    ..color = Colors.orangeAccent
-    ..strokeCap = StrokeCap.round
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 8.0;
   var funList = [];
   Map digitalMap = {
     0: [true, false, true, true, true, true, true],
@@ -121,6 +116,12 @@ class DigitalNumberPainter extends CustomPainter {
   int number;
 
   DigitalNumberPainter({this.number = 0}) {
+    Paint paint = new Paint()
+      ..color = Colors.orangeAccent
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8.0;
+
     double padding = 8;
     double rowWidth = 36;
     double columnHeight = 48;
@@ -131,7 +132,7 @@ class DigitalNumberPainter extends CustomPainter {
       Offset p2 = new Offset(rowWidth, height);
 
       funList.add((Canvas canvas) {
-        canvas.drawLine(p1, p2, white);
+        canvas.drawLine(p1, p2, paint);
       });
     }
 
@@ -141,14 +142,14 @@ class DigitalNumberPainter extends CustomPainter {
       Offset p2 = new Offset(width, columnHeight);
 
       funList.add((Canvas canvas) {
-        canvas.drawLine(p1, p2, white);
+        canvas.drawLine(p1, p2, paint);
       });
 
       Offset p3 = new Offset(width, padding + padding + columnHeight);
       Offset p4 = new Offset(width, columnHeight + columnHeight);
 
       funList.add((Canvas canvas) {
-        canvas.drawLine(p3, p4, white);
+        canvas.drawLine(p3, p4, paint);
       });
     }
   } //  MyPainter({this.lineColor, this.completeColor, this.completePercent, this.width});
