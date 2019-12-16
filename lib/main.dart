@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -17,6 +16,7 @@ class MyApp extends StatelessWidget {
         home: Scaffold(
             appBar: AppBar(title: Text("Clock")),
             body: new Container(
+              color: Colors.black,
               child: DigitalClock(),
             )));
   }
@@ -71,29 +71,27 @@ class _DigitalClockState extends State<DigitalClock> {
     return Row(
       children: <Widget>[
         Expanded(
-          child: CustomPaint(painter: DigitalNumberPainter(_time[0])),
+          child: CustomPaint(painter: DigitalNumberPainter(number: _time[0])),
           flex: 1,
         ),
         Expanded(
-          child: CustomPaint(painter: DigitalNumberPainter(_time[1])),
-          flex: 1,
-        ),
-        Text(':', style: TextStyle(color: Colors.orangeAccent, fontSize: 100)),
-        Expanded(
-          child: CustomPaint(painter: DigitalNumberPainter(_time[2])),
+          child: CustomPaint(painter: DigitalNumberPainter(number: _time[1])),
           flex: 1,
         ),
         Expanded(
-          child: CustomPaint(painter: DigitalNumberPainter(_time[3])),
-          flex: 1,
-        ),
-        Text(':', style: TextStyle(color: Colors.orangeAccent, fontSize: 100)),
-        Expanded(
-          child: CustomPaint(painter: DigitalNumberPainter(_time[4])),
+          child: CustomPaint(painter: DigitalNumberPainter(number: _time[2])),
           flex: 1,
         ),
         Expanded(
-          child: CustomPaint(painter: DigitalNumberPainter(_time[5])),
+          child: CustomPaint(painter: DigitalNumberPainter(number: _time[3])),
+          flex: 1,
+        ),
+        Expanded(
+          child: CustomPaint(painter: DigitalNumberPainter(number: _time[4])),
+          flex: 1,
+        ),
+        Expanded(
+          child: CustomPaint(painter: DigitalNumberPainter(number: _time[5])),
           flex: 1,
         ),
       ],
@@ -122,9 +120,7 @@ class DigitalNumberPainter extends CustomPainter {
   };
   int number;
 
-  DigitalNumberPainter(int number) {
-    this.number = number;
-
+  DigitalNumberPainter({this.number = 0}) {
     double padding = 8;
     double rowWidth = 36;
     double columnHeight = 48;
@@ -159,8 +155,8 @@ class DigitalNumberPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    stdout.writeln('${size.width}, ${size.height}');
     List<bool> num = digitalMap[number];
+    if (num == null) return;
     for (int i = 0; i < 7; i++) {
       if (num[i] && funList[i] != null) {
         funList[i](canvas);
@@ -170,7 +166,6 @@ class DigitalNumberPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(DigitalNumberPainter oldDelegate) {
-//    return number == oldDelegate.number;
-    return true;
+    return number != oldDelegate.number;
   }
 }
